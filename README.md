@@ -1,21 +1,29 @@
 # Conversor de HTML a PDF
 
-## Cómo usar
+## Descripción
 
-Para correr el proyecto ejecutar:
+Este proyecto permite convertir un archivo **HTML** en un **PDF** utilizando **Puppeteer**.  
+Admite la configuración de **encabezado**, **pie de página** y **márgenes** para personalizar el PDF generado.
+
+---
+
+## 🚀 Cómo usar
+
+Para ejecutar el proyecto, usa el siguiente comando:
 
 ```bash
-    node index.js args.json
+node index.js parametros.json
 ```
 
-Donde `args.json` es un archivo que contiene todos los parámetros requeridos por el `index.js`. A continuación, se presenta un ejemplo:
+Donde `parametros.json` es un archivo JSON que contiene todos los parámetros requeridos.
+A continuación, se presenta un ejemplo:
 
 ```json
 {
     "htmlSrc": "C:/Users/HP/Documents/programas-utilidades/html-to-pdf/ejemplo/archivo-ejemplo.htm",
     "outputPath": "C:/Users/HP/Documents/programas-utilidades/html-to-pdf/ejemplo/output.pdf",
-    "headerTemplate": "<div></div>",
-    "footerTemplate": "<div style=\"font-size:10px; width:100%; text-align:center; padding:5px 0;\">FOOTER - Page <span class='pageNumber'></span> of <span class='totalPages'></span></div>",
+    "headerQuery": ".cabecera_imprimir",
+    "footerQuery": ".pie_imprimir",
     "margin": {
         "top": "20mm",
         "bottom": "30mm"
@@ -23,9 +31,16 @@ Donde `args.json` es un archivo que contiene todos los parámetros requeridos po
 }
 ```
 
-Donde:
-* `htmlSrc`: Ubicación del html a transformar a pdf
-* `outputPath`: Ubicación donde se almacenará el pdf creado
-* `headerTemplate`: html del encabezado. A este se le puede añadir el pie de página, el número total de página y otros parámetros. Veáse la [Puppeteer API](https://pptr.dev/next/api/puppeteer.pdfoptions#headertemplate).
-* `footerTemplate`: html del pie de página. Se lo configura de forma similar a `headerTemplate`.
-* `margin`: tamaño del encabezado y pie de página. Este argumento es obligatorio para que estos sean visibles.
+## 📌 Parámetros del archivo parametros.json
+
+| Parámetro  | Descripción  |
+|------------|--------------|
+| `htmlSrc` | Ubicación del html a transformar a pdf |
+| `outputPath` | Ubicación donde se almacenará el pdf creado |
+| `headerQuery` | Query que marca la ubicacion del encabezado. Por ejemplo, si el encabezado es `<div class="cabecera"></div>`, query = `.cabecera`. |
+| `footerQuery` | Query que marca la ubicacion del pie de página. Véase headerQuery. |
+| `margin` | tamaño del encabezado y pie de página. Este argumento es obligatorio para que estos sean visibles. |
+
+## Customización de pie de página
+
+Veáse la [Puppeteer API](https://pptr.dev/next/api/puppeteer.pdfoptions#headertemplate) para añadir clases al HTML original que permitan mejorar los pie de páginas

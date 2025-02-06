@@ -1,31 +1,35 @@
 /**
- * Appends a random number to the filename before the file extension.
+ * Agrega una marca de tiempo y un número aleatorio al nombre del archivo antes de la extensión.
  *
- * @param {string} filename - The original filename, including extension if present.
- * @returns {string} - The modified filename with a random number appended before the extension.
+ * El formato del nuevo nombre de archivo será:
+ * `nombreArchivo_YYYYMMDD_HHMMSS_numeroAleatorio.ext`
+ *
+ * @param {string} filename - El nombre original del archivo, incluida la extensión si está presente.
+ * @returns {string} - El nombre del archivo modificado con la marca de tiempo y el número aleatorio añadido.
  *
  * @example
- * appendRandomNumberToFile("document.pdf"); // Returns "document_123456789.pdf"
- * appendRandomNumberToFile("image.png");    // Returns "image_987654321.png"
- * appendRandomNumberToFile("backup");       // Returns "backup_345678901"
- * appendRandomNumberToFile("archive.tar.gz"); // Returns "archive.tar_567890123.gz"
+ * appendTimestampToFile("reporte.pdf"); // Retorna "reporte_20250206_153045_1234.pdf"
  */
-export function appendRandomNumberToFile(filename) {
-    // Generate a random number (0 - 999999999) to ensure uniqueness
-    const randomNumber = Math.floor(Math.random() * 1000000000);
+export function appendTimestampToFile(filename) {
+    // Obtener la fecha y hora actual en formato YYYYMMDD_HHMMSS
+    const now = new Date();
+    const timestamp = now.toISOString().replace(/[-:T]/g, "").split(".")[0]; // "YYYYMMDDHHMMSS"
 
-    // Find the position of the last dot to determine the file extension
+    // Generar un número aleatorio (0 - 9999)
+    const randomNumber = Math.floor(Math.random() * 10000);
+
+    // Encontrar la posición del último punto para determinar la extensión del archivo
     const lastDotIndex = filename.lastIndexOf(".");
 
     if (lastDotIndex === -1) {
-        // If no extension is found, append the random number at the end of the filename
-        return `${filename}_${randomNumber}`;
+        // Si no se encuentra una extensión, agregar la marca de tiempo y el número aleatorio
+        return `${filename}_${timestamp}_${randomNumber}`;
     }
 
-    // Extract the filename and extension separately
-    const name = filename.substring(0, lastDotIndex); // Filename without extension
-    const extension = filename.substring(lastDotIndex); // File extension (including the dot)
+    // Extraer el nombre del archivo y la extensión por separado
+    const name = filename.substring(0, lastDotIndex); // Nombre del archivo sin extensión
+    const extension = filename.substring(lastDotIndex); // Extensión del archivo (incluido el punto)
 
-    // Construct the new filename with the random number before the extension
-    return `${name}_${randomNumber}${extension}`;
+    // Construir el nuevo nombre del archivo con la marca de tiempo y el número aleatorio antes de la extensión
+    return `${name}_${timestamp}_${randomNumber}${extension}`;
 }
