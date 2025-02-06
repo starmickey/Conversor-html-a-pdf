@@ -34,7 +34,7 @@ if (!outputPath) {
     await page.emulateMediaType("screen");
 
     await page.pdf({
-      path: outputPath,
+      path: outputPath + Math.floor(Math.random() * 100),
       format: "A4",
       displayHeaderFooter: headerTemplate || footerTemplate ? true : false,
       margin,
