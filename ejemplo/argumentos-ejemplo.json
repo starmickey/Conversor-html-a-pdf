@@ -4,6 +4,7 @@
   "headerQuery": ".cabecera_imprimir",
   "footerQuery": ".pie_imprimir",
   "margin": {
-    "bottom": "10mm"
+    "top": "60mm",
+    "bottom": "35mm"
   }
 }
