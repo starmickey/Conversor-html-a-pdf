@@ -11,6 +11,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "dotenv": "^16.4.7",
     "puppeteer": "^24.2.0",
     "winson": "^1.0.0",
     "winston": "^3.17.0"

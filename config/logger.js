@@ -1,17 +1,8 @@
 import winston from "winston";
+import { LOGS_DIR } from "./env.js";
 
 const { printf } = winston.format;
 
-/**
- * Directory where log files will be stored.
- * @constant {string}
- */
-const LOGS_DIR = "logs";
-
-/**
- * Object containing log file paths categorized by log level.
- * @constant {Object}
- */
 const LogsPaths = {
   ERROR_PATH: `${LOGS_DIR}/error.log`,    // Logs for error messages
   WARN_PATH: `${LOGS_DIR}/warn.log`,      // Logs for warnings
