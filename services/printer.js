@@ -1,18 +1,19 @@
+import { logger } from "../config/logger.js";
 import { appendRandomNumberToFile } from "../utils/stringUtils.js";
 import puppeteer from "puppeteer";
 
 /**
- * Generates a PDF from an HTML source using Puppeteer.
+ * Genera un archivo PDF a partir de una fuente HTML utilizando Puppeteer.
  *
- * @param {Object} options - Configuration options for the PDF generation.
- * @param {string} options.htmlSrc - The URL or local path of the HTML file to convert into a PDF.
- * @param {string} options.outputPath - The desired file path where the generated PDF should be saved.
- * @param {string} [options.headerTemplate] - Optional HTML string for the header template of the PDF.
- * @param {string} [options.footerTemplate] - Optional HTML string for the footer template of the PDF.
- * @param {Object} [options.margin] - Optional margin settings for the PDF.
+ * @param {Object} options - Configuración para la generación del PDF.
+ * @param {string} options.htmlSrc - URL o ruta local del archivo HTML a convertir en PDF.
+ * @param {string} options.outputPath - Ruta del archivo donde se guardará el PDF generado.
+ * @param {string} [options.headerTemplate] - (Opcional) HTML para la plantilla del encabezado del PDF.
+ * @param {string} [options.footerTemplate] - (Opcional) HTML para la plantilla del pie de página del PDF.
+ * @param {Object} [options.margin] - (Opcional) Configuración de los márgenes del PDF.
  * 
- * @throws {Error} Throws an error if `htmlSrc` or `outputPath` is not provided.
- * @returns {Promise<void>} A promise that resolves when the PDF is successfully generated.
+ * @throws {Error} Lanza un error si `htmlSrc` o `outputPath` no son proporcionados.
+ * @returns {Promise<void>} Promesa que se resuelve cuando el PDF se genera con éxito.
  */
 export async function printToPdf({
   htmlSrc,
@@ -21,47 +22,53 @@ export async function printToPdf({
   footerTemplate,
   margin,
 }) {
-  // Validate input parameters
-  if (!htmlSrc) {
-    throw Error("No se incluyó la ruta del HTML (htmlSrc)");
-  }
-
-  if (!outputPath) {
-    throw Error("No se incluyó la 'outputPath' del PDF");
-  }
-
-  // Append a random number to the output file name to avoid overwriting existing files
-  const outputFileName = appendRandomNumberToFile(outputPath);
-
-  // Generate the PDF
-  return await (async () => {
-    try {
-      // Launch a new Puppeteer browser instance
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-
-      // Navigate to the provided HTML source
-      await page.goto(htmlSrc, { waitUntil: "networkidle0" });
-
-      // Set media type to 'screen' so it renders like a normal web page (not print styles)
-      await page.emulateMediaType("screen");
-
-      // Generate the PDF with the specified settings
-      await page.pdf({
-        path: outputFileName,  // Save the PDF with the modified filename
-        format: "A4",  // Standard A4 format
-        displayHeaderFooter: headerTemplate || footerTemplate ? true : false,  // Enable headers/footers if provided
-        margin,  // Apply margin settings
-        footerTemplate,  // Footer HTML template
-        headerTemplate,  // Header HTML template
-      });
-
-      console.log("Conversion complete. PDF file generated successfully.");
-
-      // Close the browser instance
-      await browser.close();
-    } catch (error) {
-      console.error("An error occurred:", error);
+  try {
+    // Validar parámetros de entrada
+    if (!htmlSrc) {
+      throw new Error("No se incluyó la ruta del HTML (htmlSrc)");
     }
-  })();
+
+    if (!outputPath) {
+      throw new Error("No se incluyó la 'outputPath' del PDF");
+    }
+
+    logger.info("Iniciando la generación del PDF...");
+    logger.info(`Fuente HTML: ${htmlSrc}`);
+    logger.info(`Ruta de salida del PDF: ${outputPath}`);
+
+    // Generar un nombre de archivo único para evitar sobreescrituras
+    const outputFileName = appendRandomNumberToFile(outputPath);
+    logger.info(`El nombre del archivo de salida generado es: ${outputFileName}`);
+
+    // Lanzar Puppeteer
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    logger.info("Navegador Puppeteer iniciado con éxito.");
+
+    // Cargar la página HTML
+    await page.goto(htmlSrc, { waitUntil: "networkidle0" });
+    logger.info("Página HTML cargada correctamente.");
+
+    // Configurar el tipo de medio a 'screen' para evitar estilos de impresión
+    await page.emulateMediaType("screen");
+
+    // Generar el PDF con las configuraciones dadas
+    await page.pdf({
+      path: outputFileName,  // Guardar el PDF con el nombre generado
+      format: "A4",  // Formato estándar A4
+      displayHeaderFooter: !!(headerTemplate || footerTemplate),  // Mostrar encabezado/pie si se proporcionan
+      margin,  // Aplicar configuración de márgenes
+      footerTemplate,  // Plantilla del pie de página
+      headerTemplate,  // Plantilla del encabezado
+    });
+
+    logger.info("PDF generado exitosamente.");
+    
+    // Cerrar el navegador
+    await browser.close();
+    logger.info("Navegador Puppeteer cerrado correctamente.");
+    
+  } catch (error) {
+    logger.error(`Error al generar el PDF: ${error.message}`);
+  }
 }

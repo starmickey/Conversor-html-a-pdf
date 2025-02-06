@@ -1,3 +1,4 @@
+import { logger } from "./config/logger.js";
 import { printToPdf } from "./services/printer.js";
 import { getConsoleParameters } from "./utils/consoleUtils.js";
 
@@ -26,6 +27,8 @@ import { getConsoleParameters } from "./utils/consoleUtils.js";
  * 
  * @throws {Error} If the parameters file is missing or invalid.
  */
+
+logger.info("Servicio de impresión iniciado");
 
 // Retrieve command-line parameters by reading and parsing the provided JSON file
 const args = getConsoleParameters();
