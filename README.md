@@ -27,7 +27,8 @@ A continuación, se presenta un ejemplo:
     "margin": {
         "top": "20mm",
         "bottom": "30mm"
-    }
+    },
+    "cssPath": "styles.css"
 }
 ```
 
@@ -37,9 +38,10 @@ A continuación, se presenta un ejemplo:
 |------------|--------------|
 | `htmlSrc` | Ubicación del html a transformar a pdf |
 | `outputPath` | Ubicación donde se almacenará el pdf creado |
-| `headerQuery` | Query que marca la ubicacion del encabezado. Por ejemplo, si el encabezado es `<div class="cabecera"></div>`, query = `.cabecera`. |
-| `footerQuery` | Query que marca la ubicacion del pie de página. Véase headerQuery. |
-| `margin` | tamaño del encabezado y pie de página. Este argumento es obligatorio para que estos sean visibles. |
+| `headerQuery` | (Opcional) Query que marca la ubicacion del encabezado. Por ejemplo, si el encabezado es `<div class="cabecera"></div>`, query = `.cabecera`. |
+| `footerQuery` | (Opcional) Query que marca la ubicacion del pie de página. Véase headerQuery. |
+| `margin` | (Opcional) Tamaño del encabezado y pie de página. Este argumento es obligatorio para que estos sean visibles. |
+| `cssPath` | (Opcional) Ubicación del archivo de estilos a aplicar al cuerpo del PDF. |
 
 ## Customización de pie de página
 

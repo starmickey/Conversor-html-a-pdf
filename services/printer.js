@@ -13,6 +13,7 @@ import { logger } from "../config/logger.js";
  * @param {string} [options.headerTemplate] - (Opcional) HTML para la plantilla del encabezado del PDF.
  * @param {string} [options.footerTemplate] - (Opcional) HTML para la plantilla del pie de página del PDF.
  * @param {Object} [options.margin] - (Opcional) Configuración de los márgenes del PDF.
+ * @param {Object} [options.cssPath] - (Opcional) Estilos del cuerpo del PDF.
  * 
  * @throws {Error} Lanza un error si `htmlSrc` o `outputPath` no están definidos.
  * @returns {Promise<void>} Una promesa que se resuelve cuando el PDF se ha generado exitosamente.
@@ -33,6 +34,7 @@ export async function printToPdf({
   headerTemplate,
   footerTemplate,
   margin,
+  cssPath,
 }) {
   try {
     // Validar parámetros de entrada
@@ -56,6 +58,11 @@ export async function printToPdf({
     // Cargar la página HTML desde la URL o archivo local
     await page.goto(htmlSrc, { waitUntil: "networkidle0" });
     logger.info("Página HTML cargada correctamente.");
+
+    // Si se incluyo un .css, aplicar estilos al cuerpo del pdf
+    if (cssPath) {
+      await page.addStyleTag({ path: cssPath });
+    }
 
     // Configurar el tipo de medio a 'screen' para evitar aplicar estilos de impresión
     await page.emulateMediaType("screen");

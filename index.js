@@ -1,8 +1,6 @@
 import { logger } from "./config/logger.js";
-import { DOM } from "./services/html.js";
 import { printToPdf } from "./services/printer.js";
 import { getConsoleParameters } from "./utils/consoleUtils.js";
-import fs from "fs";
 import { appendTimestampToFile } from "./utils/stringUtils.js";
 
 /**
@@ -33,24 +31,20 @@ import { appendTimestampToFile } from "./utils/stringUtils.js";
 logger.info("Servicio iniciado.");
 
 // Obtener los parámetros desde el archivo JSON de entrada
-const { htmlSrc, outputPath, headerQuery, footerQuery, margin } =
-  getConsoleParameters();  
-  
-// Leer el contenido del archivo HTML
-logger.info(`Leyendo el archivo ${htmlSrc}...`);
-const htmlContent = fs.readFileSync(htmlSrc, "utf8");
-
-// Crear una instancia del analizador de HTML
-const dom = new DOM(htmlContent);
-
-// Obtener las plantillas del encabezado y pie de página si se especifican
-const headerTemplate = headerQuery ? dom.getPart(headerQuery) : "";
-const footerTemplate = footerQuery ? dom.getPart(footerQuery) : "";
+const { htmlSrc, outputPath, headerTemplate, footerTemplate, margin, cssPath } =
+  getConsoleParameters();
 
 // Generar un nombre de archivo único para evitar sobreescrituras
 const outputFileName = appendTimestampToFile(outputPath);
 
 // Generar el PDF con la configuración obtenida
-printToPdf({ htmlSrc, outputPath: outputFileName, headerTemplate, footerTemplate, margin });
+printToPdf({
+  htmlSrc,
+  outputPath: outputFileName,
+  headerTemplate,
+  footerTemplate,
+  margin,
+  cssPath,
+});
 
 logger.info("Proceso finalizado.");
