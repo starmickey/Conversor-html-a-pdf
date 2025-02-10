@@ -11,7 +11,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "body-parser": "^1.20.3",
     "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "puppeteer": "^24.2.0",
     "winson": "^1.0.0",
     "winston": "^3.17.0"

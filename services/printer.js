@@ -34,7 +34,7 @@ export async function printToPdf({
   headerTemplate,
   footerTemplate,
   margin,
-  cssPath,
+  cssPath = null,
 }) {
   try {
     // Validar parámetros de entrada

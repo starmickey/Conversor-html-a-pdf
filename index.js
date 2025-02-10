@@ -1,50 +1,34 @@
+import express from "express";
+import bodyParser from "body-parser";
+import { PORT } from "./config/env.js";
 import { logger } from "./config/logger.js";
-import { printToPdf } from "./services/printer.js";
-import { getConsoleParameters } from "./utils/consoleUtils.js";
-import { appendTimestampToFile } from "./utils/stringUtils.js";
+import { initRouter } from "./routes.js";
 
 /**
- * Punto de entrada principal de la aplicación.
- *
- * Este script lee los parámetros desde un archivo JSON proporcionado por línea de comandos
- * y genera un archivo PDF utilizando la configuración especificada.
- *
- * **Uso esperado en la línea de comandos:**
- * ```sh
- * node index.js parametros.json
- * ```
- *
- * **Estructura esperada del archivo `parametros.json`:**
- * ```json
- * {
- *   "htmlSrc": "https://ejemplo.com/reporte",
- *   "outputPath": "reporte.pdf",
- *   "headerTemplate": "<div>Encabezado</div>",
- *   "footerTemplate": "<div>Pie de página</div>",
- *   "margin": { "top": "10mm", "bottom": "10mm" }
- * }
- * ```
- *
- * @throws {Error} Lanza un error si el archivo de parámetros no existe o es inválido.
+ * Punto de entrada principal para iniciar el servidor de la API REST.
+ * Utiliza Express como framework para manejar las peticiones HTTP.
  */
 
-logger.info("Servicio iniciado.");
+// Crear una instancia de la aplicación Express
+const app = express();
 
-// Obtener los parámetros desde el archivo JSON de entrada
-const { htmlSrc, outputPath, headerTemplate, footerTemplate, margin, cssPath } =
-  getConsoleParameters();
+/**
+ * Middleware para parsear el cuerpo de las solicitudes HTTP:
+ * - `urlencoded`: Para datos enviados desde formularios.
+ * - `json`: Para solicitudes con datos en formato JSON.
+ */
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-// Generar un nombre de archivo único para evitar sobreescrituras
-const outputFileName = appendTimestampToFile(outputPath);
+/**
+ * Middleware para inicializar las rutas de la aplicación.
+ * Todas las rutas definidas en `initRouter` estarán accesibles desde `/`.
+ */
+app.use("/", initRouter());
 
-// Generar el PDF con la configuración obtenida
-printToPdf({
-  htmlSrc,
-  outputPath: outputFileName,
-  headerTemplate,
-  footerTemplate,
-  margin,
-  cssPath,
+/**
+ * Inicia el servidor en el puerto especificado y registra un mensaje en el logger.
+ */
+app.listen(PORT, () => {
+  logger.info(`Servidor en ejecución en el puerto ${PORT}`);
 });
-
-logger.info("Proceso finalizado.");
