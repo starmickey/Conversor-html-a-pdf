@@ -5,23 +5,22 @@ import { logger } from "../config/logger.js";
  * Genera un archivo PDF a partir de una fuente HTML utilizando Puppeteer.
  * 
  * Este método automatiza la conversión de una página HTML a un archivo PDF,
- * permitiendo personalizar el encabezado, pie de página y márgenes.
+ * permitiendo personalizar el encabezado, pie de página, márgenesy apicar un archivo de estilos CSS externo.
  *
  * @param {Object} options - Configuración para la generación del PDF.
- * @param {string} options.htmlSrc - URL o ruta local del archivo HTML que se convertirá en PDF.
+ * @param {string} options.mainContent - HTML preprocesado que se utilizará como cuerpo del PDF.
  * @param {string} options.outputPath - Ruta del archivo donde se guardará el PDF generado.
  * @param {string} [options.headerTemplate] - (Opcional) HTML para la plantilla del encabezado del PDF.
  * @param {string} [options.footerTemplate] - (Opcional) HTML para la plantilla del pie de página del PDF.
  * @param {Object} [options.margin] - (Opcional) Configuración de los márgenes del PDF.
  * @param {Object} [options.cssPath] - (Opcional) Estilos del cuerpo del PDF.
  * 
- * @throws {Error} Lanza un error si `htmlSrc` o `outputPath` no están definidos.
  * @returns {Promise<void>} Una promesa que se resuelve cuando el PDF se ha generado exitosamente.
  *
  * @example
  * // Generar un PDF desde una URL
  * await printToPdf({
- *   htmlSrc: "https://ejemplo.com/reporte",
+ *   mainContent: "<html><body><h1>Reporte</h1></body></html>",
  *   outputPath: "reporte.pdf",
  *   headerTemplate: "<div>Encabezado</div>",
  *   footerTemplate: "<div>Pie de página</div>",
@@ -29,25 +28,15 @@ import { logger } from "../config/logger.js";
  * });
  */
 export async function printToPdf({
-  htmlSrc,
+  mainContent,
   outputPath,
   headerTemplate,
   footerTemplate,
   margin,
-  cssPath = null,
+  cssPath,
 }) {
   try {
-    // Validar parámetros de entrada
-    if (!htmlSrc) {
-      throw new Error("No se incluyó la ruta del HTML (htmlSrc)");
-    }
-
-    if (!outputPath) {
-      throw new Error("No se incluyó la 'outputPath' del PDF");
-    }
-
     logger.info("Iniciando la generación del PDF...");
-    logger.info(`Fuente HTML: ${htmlSrc}`);
     logger.info(`Ruta de salida del PDF: ${outputPath}`);
 
     // Iniciar Puppeteer y abrir una nueva página
@@ -55,14 +44,15 @@ export async function printToPdf({
     const page = await browser.newPage();
     logger.info("Navegador Puppeteer iniciado con éxito.");
 
-    // Cargar la página HTML desde la URL o archivo local
-    await page.goto(htmlSrc, { waitUntil: "networkidle0" });
-    logger.info("Página HTML cargada correctamente.");
-
-    // Si se incluyo un .css, aplicar estilos al cuerpo del pdf
+    // Si se incluye un archivo CSS, aplicarlo al contenido del PDF
     if (cssPath) {
       await page.addStyleTag({ path: cssPath });
+      logger.debug(`Archivo de estilos aplicado desde: ${cssPath}`);
     }
+    
+    // Establecer el contenido HTML procesado directamente en la página
+    await page.setContent(mainContent, { waitUntil: "networkidle0" });
+    logger.debug("Contenido HTML cargado correctamente en la página.");
 
     // Configurar el tipo de medio a 'screen' para evitar aplicar estilos de impresión
     await page.emulateMediaType("screen");
@@ -77,7 +67,7 @@ export async function printToPdf({
       headerTemplate,  // Plantilla del encabezado
     });
 
-    logger.info(`PDF generado exitosamente: ${outputPath}`);
+    logger.info(`PDF generado exitosamente en ${outputPath}`);
 
     // Cerrar el navegador
     await browser.close();

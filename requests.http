@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 GET http://localhost:3000/status http/1.1
 #######
 
@@ -14,4 +15,20 @@ content-type: application/json
         "bottom": "30mm"
     },
     "cssPath": "styles.css"
+=======
+POST http://localhost:3000/convert-html-to-pdf HTTP/1.1
+content-type: application/json
+
+{
+    "htmlSrc": "C:/Users/HP/Documents/programas-utilidades/html-to-pdf/ejemplo/objetivo.htm",
+    "outputPath": "C:/Users/HP/Documents/programas-utilidades/html-to-pdf/ejemplo/output.pdf",
+    // "headerTemplate": "<div>Encabezado personalizado</div>",
+    // "footerTemplate": "<div style='text-align:center;'>Página <span class='pageNumber'></span> de <span class='totalPages'></span></div>",
+    "headerQuery": ".cabecera-imprimir",
+    "footerQuery": ".pie-imprimir",
+    "margin": {
+        "top": "20mm",
+        "bottom": "30mm"
+    }
+>>>>>>> 0423883fa188e6df35b8a1f05bad4ea61e003655
 }

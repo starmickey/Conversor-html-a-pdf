@@ -26,9 +26,35 @@ app.use(bodyParser.json());
  */
 app.use("/", initRouter());
 
-/**
- * Inicia el servidor en el puerto especificado y registra un mensaje en el logger.
- */
-app.listen(PORT, () => {
+// Middleware para manejar rutas no encontradas
+app.use((req, res, next) => {
+  res.status(404).json({ error: "Ruta no encontrada." });
+});
+
+// Middleware para manejo de errores global
+app.use((err, req, res, next) => {
+  logger.error(`Error: ${err.message}`);
+  res.status(500).json({ error: "Ocurrió un error interno en el servidor." });
+});
+
+// Iniciar el servidor
+const server = app.listen(PORT, () => {
   logger.info(`Servidor en ejecución en el puerto ${PORT}`);
+});
+
+// Manejo de señales para apagar el servidor de forma controlada
+process.on("SIGTERM", () => {
+  logger.info("Recibida señal SIGTERM. Cerrando servidor...");
+  server.close(() => {
+    logger.info("Servidor cerrado correctamente.");
+    process.exit(0);
+  });
+});
+
+process.on("SIGINT", () => {
+  logger.info("Recibida señal SIGINT. Cerrando servidor...");
+  server.close(() => {
+    logger.info("Servidor cerrado correctamente.");
+    process.exit(0);
+  });
 });
