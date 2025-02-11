@@ -29,7 +29,6 @@ PORT=3000
 LOGS_DIR=logs
 ```
 
-
 ### Iniciar el servidor
 
 Para ejecutar el servidor de la API:
@@ -55,6 +54,7 @@ Por defecto, el servidor se ejecuta en el puerto definido en el archivo .env o e
 ```bash
 curl http://localhost:3000/status
 ```
+
 ##### Respuesta:
 
 ```plaintext
@@ -71,29 +71,28 @@ Estoy andando perfecto.
 
 ```json
 {
-    "htmlSrc": "C:/Users/HP/Documents/programas-utilidades/html-to-pdf/ejemplo/archivo-ejemplo.htm",
-    "outputPath": "C:/Users/HP/Documents/programas-utilidades/html-to-pdf/ejemplo/output.pdf",
-    "headerTemplate": "<div>Encabezado personalizado</div>",
-    "footerTemplate": "<div style='text-align:center;'>Página <span class='pageNumber'></span> de <span class='totalPages'></span></div>",
-    "margin": {
-        "top": "20mm",
-        "bottom": "30mm"
-    },
-    "cssPath": "styles.css"
+  "htmlSrc": "C:/path/al/html.html",
+  "outputPath": "C:/path/del/archivo/de/salida.pdf",
+  "headerQuery": ".cabecera",
+  "footerQuery": ".pie",
+  "margin": {
+    "top": "20mm",
+    "bottom": "30mm"
+  },
+  "cssPath": "styles.css"
 }
 ```
 
-#### 📌 Parámetros del cuerpo de la solicitud 
+#### 📌 Parámetros del cuerpo de la solicitud
 
-
-| Parámetro  | Tipo  | Descripción  |
-|------------|--------------|--------------|
-| `htmlSrc` | `string` | Ubicación del html a transformar a pdf |
-| `outputPath` | `string` | Ubicación donde se almacenará el pdf creado |
+| Parámetro     | Tipo     | Descripción                                                                                                                                   |
+| ------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `htmlSrc`     | `string` | Ubicación del html a transformar a pdf                                                                                                        |
+| `outputPath`  | `string` | Ubicación donde se almacenará el pdf creado                                                                                                   |
 | `headerQuery` | `string` | (Opcional) Query que marca la ubicacion del encabezado. Por ejemplo, si el encabezado es `<div class="cabecera"></div>`, query = `.cabecera`. |
-| `footerQuery` | `string` | (Opcional) Query que marca la ubicacion del pie de página. Véase headerQuery. |
-| `margin` | `object` | (Opcional) Tamaño del encabezado y pie de página. Este argumento es obligatorio para que estos sean visibles. |
-| `cssPath` | `string` | (Opcional) Ubicación del archivo de estilos a aplicar al cuerpo del PDF. |
+| `footerQuery` | `string` | (Opcional) Query que marca la ubicacion del pie de página. Véase headerQuery.                                                                 |
+| `margin`      | `object` | (Opcional) Tamaño del encabezado y pie de página. Este argumento es obligatorio para que estos sean visibles.                                 |
+| `cssPath`     | `string` | (Opcional) Ubicación del archivo de estilos a aplicar al cuerpo del PDF.                                                                      |
 
 #### ✨ Customización de pie de página
 
@@ -109,8 +108,8 @@ curl -X POST http://localhost:3000/convert-html-to-pdf \
   -d '{
     "htmlSrc": "C:/Users/HP/Documents/programas-utilidades/html-to-pdf/ejemplo/archivo-ejemplo.htm",
     "outputPath": "C:/Users/HP/Documents/programas-utilidades/html-to-pdf/ejemplo/output.pdf",
-    "headerTemplate": "<div>Encabezado personalizado</div>",
-    "footerTemplate": "<div style=\"text-align:center;\">Página <span class=\"pageNumber\"></span> de <span class=\"totalPages\"></span></div>",
+    "headerQuery": ".cabecera",
+    "footerQuery": ".pie",
     "margin": { "top": "20mm", "bottom": "30mm" },
     "cssPath": "styles.css"
   }'

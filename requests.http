@@ -1,0 +1,15 @@
+POST http://localhost:3000/convert-html-to-pdf HTTP/1.1
+content-type: application/json
+
+{
+    "htmlSrc": "C:/Users/HP/Documents/programas-utilidades/html-to-pdf/ejemplo/objetivo.htm",
+    "outputPath": "C:/Users/HP/Documents/programas-utilidades/html-to-pdf/ejemplo/output.pdf",
+    // "headerTemplate": "<div>Encabezado personalizado</div>",
+    // "footerTemplate": "<div style='text-align:center;'>Página <span class='pageNumber'></span> de <span class='totalPages'></span></div>",
+    "headerQuery": ".cabecera-imprimir",
+    "footerQuery": ".pie-imprimir",
+    "margin": {
+        "top": "20mm",
+        "bottom": "30mm"
+    }
+}
