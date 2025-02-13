@@ -1,8 +1,8 @@
-import fs from "fs";
 import { DOM } from "../services/htmlParser.js";
 import { printToPdf } from "../services/printer.js";
 import { appendTimestampToFile } from "../utils/stringUtils.js";
 import { logger } from "../config/logger.js";
+import fetchFile from "../services/fetchFile.js";
 
 /**
  * Controlador para manejar la solicitud POST en `/convert-html-to-pdf`.
@@ -41,11 +41,21 @@ export default async function printToPdfController(req, res) {
 
     // Leer el contenido del archivo HTML desde la ruta especificada
     logger.info(`Leyendo el HTML ${htmlSrc}`);
-    const htmlContent = fs.readFileSync(htmlSrc, "utf8");
+    const htmlContent = fetchFile(htmlSrc, "utf8");
+
+    // Si no se encontró el HTML, retornar un error 404
+    if (!htmlContent) {
+      return res.status(404).send(`No se encontró el HTML ${htmlContent}`);
+    }
     logger.debug(`Lectura de HTML finalizada`);
 
     // Crear una instancia del analizador DOM para extraer partes del documento
     const dom = new DOM(htmlContent);
+    logger.debug(`HTML procesado por JSDOM`);
+
+    // Reemplazar todas las imágenes por su versión en base64 para que puppeteer pueda procesarlas
+    await dom.replaceImgSrcWithBase64();
+    logger.debug(`Imágenes reemplazadas por Base64 en el HTML procesado por JSDOM`);
 
     // Extraer partes del documento
     const headerTemplate = dom.extractPart(headerQuery);
