@@ -6,9 +6,8 @@ Este proyecto es una **API REST** que permite convertir un archivo **HTML** en u
 
 Admite la configuración de **encabezado**, **pie de página**, **márgenes** y **estilos personalizados** para generar PDF a medida.
 
----
 
-## 🚀 Cómo usar
+## 🛠️ Cómo usar
 
 ### Requisitos previos
 
@@ -50,7 +49,6 @@ npm start
 
 Por defecto, el servidor se ejecuta en el puerto definido en el archivo .env o en el puerto 3000.
 
----
 
 ## 🚀 Configurar el Proyecto para Producción
 
@@ -102,33 +100,72 @@ pm2 list
 ```
 Este comando mostrará una lista de todos los procesos gestionados por PM2, incluyendo tu aplicación.
 
----
 
 ## ⚙️ Administrar la aplicación en producción
 
-### Monitoreo y Logs
+### Administración mediante scripts `.bat`
+
+#### Iniciar aplicación
+
+```cmd
+cd C:\...\html-to-pdf\scripts
+start.bat
+```
+
+#### Ver estado de la aplicación
+
+```cmd
+cd C:\...\html-to-pdf\scripts
+status.bat
+```
+
+
+#### Ver logs de aplicación
+
+```cmd
+cd C:\...\html-to-pdf\scripts
+logs.bat
+```
+
+#### Detener aplicación
+
+```cmd
+cd C:\...\html-to-pdf\scripts
+stop.bat
+```
+
+#### Reiniciar aplicación
+
+```cmd
+cd C:\...\html-to-pdf\scripts
+start.bat
+```
+
+### Administración mediante comandos de pm2
+
+#### Monitoreo y Logs
 
 PM2 ofrece una forma fácil de monitorear tu aplicación y acceder a los logs:
 
-1. Monitoreo en tiempo real de tu aplicación:
+1. **Monitoreo en tiempo real de tu aplicación:**
 
 ```bash
 pm2 monit
 ```
 
-2. Ver los logs de la aplicación:
+2. **Ver los logs de la aplicación:**
 
 ```bash
 pm2 logs
 ```
 
-3. Ver logs específicos de la aplicación:
+3. **Ver logs específicos de la aplicación:**
 
 ```bash
 pm2 logs html-to-pdf-api
 ```
 
-### Parar aplicación
+#### Parar aplicación
 
 Para detener tu aplicación:
 
@@ -136,20 +173,19 @@ Para detener tu aplicación:
 pm2 stop html-to-pdf-api
 ```
 
-### Reiniciar aplicación
+#### Reiniciar aplicación
 Para reiniciar tu aplicación:
 
 ```bash
 pm2 restart html-to-pdf-api
 ```
 
-### Eliminar aplicación
+#### Eliminar aplicación
 
 ```bash
 pm2 delete html-to-pdf-api
 ```
 
----
 
 ## 📌 Endpoints de la API
 
@@ -229,6 +265,11 @@ curl -X POST http://localhost:3000/convert-html-to-pdf \
 
 ```bash
 /config       -> Configuración del entorno y logger
-/services     -> Lógica principal para la conversión de HTML a PDF
+/controllers  -> Capa que atrapa los endpoints de la APP
+/scripts      -> Comandos utilizados en producción para administrar la app
+/services     -> Funciones empleadas por los controladores para satisfacer los casos de uso
 /utils        -> Utilidades adicionales (gestión de archivos, strings, etc.)
+
+index.js      -> Punto de entrada de la aplicación. Define la app de Express.js
+routes.js     -> Declaración de las rutas de la API y qué controladores las resuelven
 ```

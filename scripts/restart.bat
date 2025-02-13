@@ -1,0 +1,1 @@
+pm2 restart html-to-pdf-api
