@@ -51,11 +51,9 @@ export default async function printToPdfController(req, res) {
 
     // Crear una instancia del analizador DOM para extraer partes del documento
     const dom = new DOM(htmlContent);
-    logger.debug(`HTML procesado por JSDOM`);
 
     // Reemplazar todas las imágenes por su versión en base64 para que puppeteer pueda procesarlas
     await dom.replaceImgSrcWithBase64();
-    logger.debug(`Imágenes reemplazadas por Base64 en el HTML procesado por JSDOM`);
 
     // Extraer partes del documento
     const headerTemplate = dom.extractPart(headerQuery);

@@ -1,16 +1,8 @@
 import winston from "winston";
-import { LOGS_DIR } from "./env.js";
+import "winston-daily-rotate-file";
+import { LOG_LEVEL, LOGS_DIR } from "./env.js";
 
 const { printf } = winston.format;
-
-const LogsPaths = {
-  ERROR_PATH: `${LOGS_DIR}/error.log`,    // Logs for error messages
-  WARN_PATH: `${LOGS_DIR}/warn.log`,      // Logs for warnings
-  INFO_PATH: `${LOGS_DIR}/info.log`,      // Logs for informational messages
-  HTTP_PATH: `${LOGS_DIR}/http.log`,      // Logs for HTTP requests
-  VERBOSE_PATH: `${LOGS_DIR}/verbose.log`, // Logs for verbose/debugging details
-  DEBUG_PATH: `${LOGS_DIR}/debug.log`,    // Logs for debugging messages
-};
 
 /**
  * Custom log message format.
@@ -24,6 +16,17 @@ const customFormat = printf(({ level, message }) => {
   return `[${level.toUpperCase()}] [${new Date().toISOString()}]: ${message}`;
 });
 
+const transport = (level) => {
+  return new winston.transports.DailyRotateFile({
+    dirname: LOGS_DIR,
+    filename: `${level}-%DATE%.log`,
+    datePattern: "YYYY-MM-DD",
+    maxSize: "20m",
+    maxFiles: "14d",
+    level,
+  });
+};
+
 /**
  * Winston logger configuration.
  *
@@ -35,15 +38,15 @@ const customFormat = printf(({ level, message }) => {
  * @constant {winston.Logger}
  */
 export const logger = winston.createLogger({
-  level: "debug", // Default logging level
-  format: winston.format.combine(
-    winston.format.colorize({ all: true }), // Apply color formatting
-    customFormat // Apply custom log message format
+  level: LOG_LEVEL, // Default logging level
+  format:winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
   ),
   transports: [
     /**
      * Console transport:
-     * - Logs messages at the "info" level and above to the console.
+     * - Logs messages at the "LOG_LEVEL" level and above to the console.
      * - Uses colors to differentiate log levels.
      */
     new winston.transports.Console({
@@ -59,11 +62,11 @@ export const logger = winston.createLogger({
      * - Stores logs in separate files based on log level.
      * - Helps in debugging by categorizing log messages.
      */
-    new winston.transports.File({ filename: LogsPaths.ERROR_PATH, level: "error" }),
-    new winston.transports.File({ filename: LogsPaths.WARN_PATH, level: "warn" }),
-    new winston.transports.File({ filename: LogsPaths.INFO_PATH, level: "info" }),
-    new winston.transports.File({ filename: LogsPaths.HTTP_PATH, level: "http" }),
-    new winston.transports.File({ filename: LogsPaths.VERBOSE_PATH, level: "verbose" }),
-    new winston.transports.File({ filename: LogsPaths.DEBUG_PATH, level: "debug" }),
+    transport("error"),
+    transport("warn"),
+    transport("info"),
+    transport("http"),
+    transport("verbose"),
+    transport("debug"),
   ],
 });

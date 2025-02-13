@@ -17,7 +17,8 @@
     "jsdom": "^26.0.0",
     "puppeteer": "^24.2.0",
     "winson": "^1.0.0",
-    "winston": "^3.17.0"
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

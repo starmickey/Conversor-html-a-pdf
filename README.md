@@ -27,6 +27,8 @@ Puedes definir las siguientes variables en el archivo .env para personalizar la 
 ```ini
 PORT=3000
 LOGS_DIR=logs
+NODE_ENV=production # production - development
+LOG_LEVEL=debug # error | warn | info | http | debug | verbose
 ```
 
 ### Iniciar el servidor
