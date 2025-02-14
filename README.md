@@ -6,7 +6,6 @@ Este proyecto es una **API REST** que permite convertir un archivo **HTML** en u
 
 Admite la configuración de **encabezado**, **pie de página**, **márgenes** y **estilos personalizados** para generar PDF a medida.
 
-
 ## 🛠️ Cómo usar
 
 ### Requisitos previos
@@ -49,14 +48,13 @@ npm start
 
 Por defecto, el servidor se ejecuta en el puerto definido en el archivo .env o en el puerto 3000.
 
-
 ## 🚀 Configurar el Proyecto para Producción
 
 Optamos por utilizar pm2 para el deploy del proyecto en lugar de Docker para facilitar el acceso de la aplicación al directorio de archivos.
 
 ### 1. Eliminar dependencias de desarrollo
 
-Instalar solo las librerías listadas en el parámetro `dependencies` del `package.json` y 
+Instalar solo las librerías listadas en el parámetro `dependencies` del `package.json` y
 eliminar las librerías de desarrollo (listadas en `devDependencies`) si se encuentran instaladas. Esto se realiza mediante el siguiente comando:
 
 ```bash
@@ -81,6 +79,7 @@ Luego, debes instalar PM2 globalmente en tu servidor o máquina de producción.
 ```bash
 npm install -g pm2
 ```
+
 ### 4. Iniciar la Aplicación con PM2
 
 Ahora que tienes PM2 instalado, puedes iniciar tu aplicación con él:
@@ -98,8 +97,8 @@ Este comando le indica a PM2 que ejecute tu archivo index.js y le asigne el nomb
 ```bash
 pm2 list
 ```
-Este comando mostrará una lista de todos los procesos gestionados por PM2, incluyendo tu aplicación.
 
+Este comando mostrará una lista de todos los procesos gestionados por PM2, incluyendo tu aplicación.
 
 ## ⚙️ Administrar la aplicación en producción
 
@@ -118,7 +117,6 @@ start.bat
 cd C:\...\html-to-pdf\scripts
 status.bat
 ```
-
 
 #### Ver logs de aplicación
 
@@ -174,6 +172,7 @@ pm2 stop html-to-pdf-api
 ```
 
 #### Reiniciar aplicación
+
 Para reiniciar tu aplicación:
 
 ```bash
@@ -185,7 +184,6 @@ pm2 restart html-to-pdf-api
 ```bash
 pm2 delete html-to-pdf-api
 ```
-
 
 ## 📌 Endpoints de la API
 
@@ -213,7 +211,23 @@ Estoy andando perfecto.
 
 **Descripción**: Convierte un archivo HTML en PDF utilizando los parámetros enviados en el cuerpo de la solicitud.
 
-#### Ejemplo de solicitud:
+#### Ejemplo de solicitud 1:
+
+```json
+{
+  "html": "<div class='encabezado'>encabezado</div><div class='cuerpo'>cuerpo</div><div class='pie'>pie</div>",
+  "outputPath": "C:/path/del/archivo/de/salida.pdf",
+  "headerQuery": ".cabecera",
+  "footerQuery": ".pie",
+  "margin": {
+    "top": "20mm",
+    "bottom": "30mm"
+  },
+  "cssPath": "styles.css"
+}
+```
+
+#### Ejemplo de solicitud 2:
 
 ```json
 {
@@ -233,7 +247,8 @@ Estoy andando perfecto.
 
 | Parámetro     | Tipo     | Descripción                                                                                                                                   |
 | ------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `htmlSrc`     | `string` | Ubicación del html a transformar a pdf                                                                                                        |
+| `html`        | `string` | (Opcional) HTML a transformar. Si no se incluye, htmlSrc es obligatorio.                                                                      |
+| `htmlSrc`     | `string` | (Opcional) Ubicación del html a transformar a pdf. Si no se incluye, html es obligatorio.                                                     |
 | `outputPath`  | `string` | Ubicación donde se almacenará el pdf creado                                                                                                   |
 | `headerQuery` | `string` | (Opcional) Query que marca la ubicacion del encabezado. Por ejemplo, si el encabezado es `<div class="cabecera"></div>`, query = `.cabecera`. |
 | `footerQuery` | `string` | (Opcional) Query que marca la ubicacion del pie de página. Véase headerQuery.                                                                 |
